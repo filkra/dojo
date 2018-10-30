@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-	compile 'de.hhu.krakowski:lib:1.0'
+	compile 'de.hhu.krakowski:testresultview:1.0'
 	compile "de.hhu.stups:virtual-kata-lib:2.0.0"
 	compile "org.sonatype.nexus:google-guava-eventbus:3.0.0-03"
 	compile "org.fxmisc.richtext:richtextfx:0.6.10"

@@ -3,9 +3,14 @@ package tddtrainer.gui;
 import static tddtrainer.events.JavaCodeChangeEvent.CodeType.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Random;
 import java.util.ResourceBundle;
 
+import de.hhu.krakowski.testresultview.data.TestResult;
+import de.hhu.krakowski.testresultview.view.TestResultView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +38,7 @@ import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
 import tddtrainer.events.automaton.SwitchedToRedEvent;
 import tddtrainer.events.automaton.SwitchedToRefactorEvent;
+import vk.core.api.CompileError;
 
 public class EditorViewController extends SplitPane implements Initializable {
 
@@ -40,9 +46,10 @@ public class EditorViewController extends SplitPane implements Initializable {
     private WebView code;
 
     @FXML
-    private TextArea console;
+    private TextArea testOutput;
+
     @FXML
-    private TextArea testoutput;
+    private TextArea testMessage;
 
     @FXML
     private AnchorPane codePane;
@@ -64,6 +71,9 @@ public class EditorViewController extends SplitPane implements Initializable {
 
     @FXML
     private HBox codeBox;
+
+    @FXML
+    private TestResultView testresultview;
 
     @FXML
     HBox statuscontainer;
@@ -102,8 +112,9 @@ public class EditorViewController extends SplitPane implements Initializable {
         AnchorPane.setRightAnchor(this, 5.0);
         AnchorPane.setTopAnchor(this, 60.0);
 
-        console.setStyle("-fx-font-family:monospace;");
-
+        testresultview.selectedResultProperty().addListener((observable, oldValue, newValue) -> {
+            testMessage.setText(newValue.getDescription());
+        });
     }
 
     @Subscribe
@@ -258,30 +269,57 @@ public class EditorViewController extends SplitPane implements Initializable {
 
     private void applyFontSize() {
         String style = "-fx-font-size:" + fontSize + "px";
-        console.setStyle(style);
-        testoutput.setStyle(style);
         code.getEngine().executeScript("changeFontSize(" + fontSize + ")");
         tests.getEngine().executeScript("changeFontSize(" + fontSize + ")");
     }
 
+    private static vk.core.api.TestResult getTestResult(AutoCompilerResult result) {
+        vk.core.api.TestResult results = null;
+
+        try {
+            Field field = result.getClass().getDeclaredField("testResult");
+            field.setAccessible(true);
+            results = (vk.core.api.TestResult) field.get(result);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // ignored;
+        }
+
+        return results;
+    }
+
+    private void updateTestResultView(vk.core.api.TestResult testResult) {
+        testresultview.clear();
+
+        testResult.getTestFailures().forEach(failure ->
+                testresultview.add(new TestResult(failure.getTestClassName(), failure.getMethodName(),
+                                                  failure.getMessage(), 0, true)));
+    }
+
     @Subscribe
     public void compileResult(AutoCompilerResult result) {
-        console.setText("Compiler Output:\n================\n" + result.getCompilerOutput());
-        testoutput.setText("System.out/System.err:\n=================\n" + result.getTestOutput());
+        testOutput.clear();
+        testresultview.clear();
+
         if (result.allClassesCompile()) {
             if (result.allTestsGreen()) {
                 status.setText("Code and Test compile, and the tests are passing.");
                 status.setStyle("-fx-text-fill: white");
                 statuscontainer.setStyle("-fx-background-color: green");
+                testOutput.setText(result.getTestOutput());
             } else {
                 status.setText("Code and Test compile, but the tests are not passing.");
                 status.setStyle("-fx-text-fill: white");
                 statuscontainer.setStyle("-fx-background-color: red");
+
+                vk.core.api.TestResult testResult = getTestResult(result);
+                updateTestResultView(testResult);
+                testOutput.setText(result.getTestOutput());
             }
         } else {
             status.setText("Code or Test (or both) contain errors.");
             status.setStyle("-fx-text-fill: white");
             statuscontainer.setStyle("-fx-background-color: black");
+            testOutput.setText(result.getCompilerOutput());
         }
     }
 

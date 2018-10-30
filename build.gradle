@@ -9,6 +9,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
+	mavenLocal()
 	mavenCentral()
 	maven {
 		name "Snapshots"
@@ -21,6 +22,7 @@ repositories {
 }
 
 dependencies {
+	compile 'de.hhu.krakowski:lib:1.0'
 	compile "de.hhu.stups:virtual-kata-lib:2.0.0"
 	compile "org.sonatype.nexus:google-guava-eventbus:3.0.0-03"
 	compile "org.fxmisc.richtext:richtextfx:0.6.10"
@@ -34,5 +36,9 @@ dependencies {
 }
 
 mainClassName = "tddtrainer.Startup"
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.10.2'
+}
 
 // jar.archiveName = 'dojo.jar'

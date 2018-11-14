@@ -1,8 +1,6 @@
-@font-face { 
-    src: url('/fonts/Swagger/Swagger.ttf'); 
-} 
-
-
+@font-face {
+    src: url('/fonts/Swagger/Swagger.ttf');
+}
 
 .split-pane > .split-pane-divider {
     -fx-padding: 0.0 1.0 0.0 1.0;
@@ -10,61 +8,70 @@
 }
 
 .split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: #6f8391;
-   -fx-background-insets: 0.0;
+    -fx-background-color: #6f8391;
+    -fx-background-insets: 0.0;
 }
 
 .text-area .content {
-      -fx-border-color: white;
-   -fx-background-color: white;
-}
-.text-area  {
-   -fx-background-color: white;
-      -fx-border-color: white;
-}
-.split-pane  {
-   -fx-background-color: white;
-      -fx-border-color: white;
+    -fx-border-color: white;
+    -fx-background-color: white;
 }
 
+.text-area  {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
+
+#testOutput {
+    -fx-text-fill: #eeeeee;
+}
+
+#testOutput .content {
+    -fx-background-color: #2e3131;
+}
+
+.split-pane  {
+    -fx-background-color: white;
+    -fx-border-color: white;
+}
 
 .split-pane:vertical > .split-pane-divider {
-   -fx-background-color: #6f8391;
-   -fx-background-insets: 0.0;
+    -fx-background-color: #6f8391;
+    -fx-background-insets: 0.0;
 }
 
 .statuslabel-red {
-	-fx-text-fill: crimson;
-	-fx-font-family: 'Swagger';
-	-fx-font-weight: bold;
+    -fx-text-fill: crimson;
+    -fx-font-family: 'Swagger';
+    -fx-font-weight: bold;
 }
 
 .statuslabel-green {
-	-fx-text-fill: forestgreen;
-	-fx-font-family: 'Swagger';
-	-fx-font-weight: bold;
+    -fx-text-fill: forestgreen;
+    -fx-font-family: 'Swagger';
+    -fx-font-weight: bold;
 }
 
 .statuslabel-refactor {
-	-fx-text-fill: grey;
-	-fx-font-family: 'Swagger';
-	-fx-font-weight: bold;
+    -fx-text-fill: grey;
+    -fx-font-family: 'Swagger';
+    -fx-font-weight: bold;
 }
 
 .button {
-	-fx-background-color: #6f8391;
-	-fx-text-fill: white;
-	-fx-font-weight: bold;
+    -fx-background-color: #6f8391;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
 }
 
 .label {
-	-fx-text-fill: #6f8391;
+    -fx-text-fill: #6f8391;
 }
 
 .instruction {
-	-fx-font-family: 'Swagger';
-	-fx-font-size: 16.0;
-	-fx-font-weight: bolder;
-	-fx-text-fill: black;
+    -fx-font-family: 'Swagger';
+    -fx-font-size: 16.0;
+    -fx-font-weight: bolder;
+    -fx-text-fill: black;
 }
 

@@ -113,6 +113,10 @@ public class EditorViewController extends SplitPane implements Initializable {
         AnchorPane.setTopAnchor(this, 60.0);
 
         testresultview.selectedResultProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                return;
+            }
+
             testMessage.setText(newValue.getDescription());
         });
     }
@@ -288,17 +292,21 @@ public class EditorViewController extends SplitPane implements Initializable {
     }
 
     private void updateTestResultView(vk.core.api.TestResult testResult) {
+        testresultview.getSelectionModel().clearSelection();
         testresultview.clear();
 
         testResult.getTestFailures().forEach(failure ->
                 testresultview.add(new TestResult(failure.getTestClassName(), failure.getMethodName(),
-                                                  failure.getMessage(), 0, true)));
+                                                  failure.getExceptionStackTrace().split("\n")[0], 0, true)));
+
+        testresultview.getSelectionModel().selectFirst();
     }
 
     @Subscribe
     public void compileResult(AutoCompilerResult result) {
         testOutput.clear();
         testresultview.clear();
+        testMessage.clear();
 
         if (result.allClassesCompile()) {
             if (result.allTestsGreen()) {
